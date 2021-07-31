@@ -1,0 +1,11 @@
+{% extends 'authapp/base.html' %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h3 style="text-align: center">Поздравляем!!!</h3>
+        <div style="text-align: center"> Пользователь {{ user.email }} теперь работает в цирке вместо льва!!</div>
+    {% else %}
+        <h3 style="text-align: center">НЕ Поздравляем!</h3>
+        <div style="text-align: center">Вам не удалось активировать профиль</div>
+    {% endif %} 
+{% endblock %}
