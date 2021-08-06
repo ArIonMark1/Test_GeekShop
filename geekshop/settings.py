@@ -64,6 +64,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'mainapp.context_processors.basket',
             ],
         },
     },
@@ -137,5 +138,7 @@ EMAIL_HOST_USER = 'django@geekshop.local'
 EMAIL_HOST_PASSWORD = 'geekshop'
 EMAIL_USE_SSL = False
 # EMAIL_USE_TLS = False
-EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
+# EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
 
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = 'tmp/mails/'

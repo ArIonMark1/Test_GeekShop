@@ -83,18 +83,19 @@ def edit(request):
 
 def verify(request, email, activation_key):
     user = ShopUser.objects.filter(email=email).first()
+    # user = ShopUser.objects.get(email=email) # второй варриант
     if user:
         if user.activation_key == activation_key and not user.is_activation_key_expired():
             user.is_active = True
             user.save()
-            auth.login(request, user)
-            return render(request, 'authapp/verify.html')
-
-    return HttpResponseRedirect(reverse('main'))
+            auth.login(request, user)  # моментальная автоматическая регистрация(
+            # или можно перебрасывать на страеицу активации..)
+        return render(request, 'authapp/verify.html') # страничка верификации
+    return HttpResponseRedirect(reverse('main'))  # в случае некоректного ввода активации почты
 
 
 def send_verify_mail(user):
-    subject = 'Verify your account'
+    subject = 'Verify your account'  # сам текст
     link = reverse('auth:verify', args=[user.email, user.activation_key])
     message = f'{settings.DOMAIN_NAME}{link}'
     return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
