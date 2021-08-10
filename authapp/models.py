@@ -24,6 +24,9 @@ class ShopUser(AbstractUser):
             return False
         return True
 
+    def __str__(self):
+        return self.username
+
 
 class ShopUserProfile(models.Model):
     MALE = 'M'
