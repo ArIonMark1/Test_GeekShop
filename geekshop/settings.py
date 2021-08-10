@@ -149,5 +149,5 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
 )
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '673485336361-c7kig3brrljiu3cg3n193ni9a6brbf6i.apps.googleusercontent.com'  # client_id
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'PEC4-ANcGdPXA0Y2OAnQOkqc'  # client_secret
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')  # client_id
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')  # client_secret
