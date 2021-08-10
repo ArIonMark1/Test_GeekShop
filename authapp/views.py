@@ -88,9 +88,10 @@ def verify(request, email, activation_key):
         if user.activation_key == activation_key and not user.is_activation_key_expired():
             user.is_active = True
             user.save()
-            auth.login(request, user)  # моментальная автоматическая регистрация(
+            auth.login(request, user,
+                       backend='django.contrib.auth.backends.ModelBackend')  # моментальная автоматическая регистрация(
             # или можно перебрасывать на страеицу активации..)
-        return render(request, 'authapp/verify.html') # страничка верификации
+        return render(request, 'authapp/verify.html')  # страничка верификации
     return HttpResponseRedirect(reverse('main'))  # в случае некоректного ввода активации почты
 
 
