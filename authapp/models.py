@@ -1,5 +1,7 @@
 import datetime
 
+import pytz
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.timezone import now
@@ -15,6 +17,6 @@ class ShopUser(AbstractUser):
     # activation_key_expires = models.DateTimeField(default=(now() + timedelta(hours=48))) = not correct
 
     def is_activation_key_expired(self):  # функция для проверки
-        if datetime.now() < self.activation_key_created + timedelta(hours=48):
+        if datetime.now(pytz.timezone(settings.TIME_ZONE)) < (self.activation_key_created + timedelta(hours=48)):
             return False
         return True
