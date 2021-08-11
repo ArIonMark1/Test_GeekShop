@@ -75,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-LOGIN_URL = '/ '
+LOGIN_ERROR_URL = '/ '
 
 WSGI_APPLICATION = 'geekshop.wsgi.application'
 
@@ -147,6 +147,7 @@ EMAIL_USE_SSL = False
 # EMAIL_USE_TLS = False
 # EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
 
+# Email ass files
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = 'tmp/mails/'
 
@@ -158,4 +159,17 @@ AUTHENTICATION_BACKENDS = (
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')  # client_id
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')  # client_secret
 
-SOCIAL_AUTH_GOOGLE_IGNORE_DEFAULT_SCOPE = True
+SOCIAL_AUTH_GOOGLE_OAUTH2_IGNORE_DEFAULT_SCOPE = True
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email']
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.create_user',
+    'authapp.pipeline.save_user_profile',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)

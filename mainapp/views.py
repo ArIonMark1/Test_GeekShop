@@ -9,6 +9,7 @@ JSON_PATH = 'mainapp/json'
 
 def load_from_json(file_name):
     with open(os.path.join(JSON_PATH, file_name + '.json'), 'r') as infile:
+        # print("$$$$===>>>",json.load(infile))
         return json.load(infile)
 
 
@@ -16,6 +17,8 @@ def get_hot_product():
     products = Product.objects.filter(is_active=True, category__is_active=True)
 
     return random.sample(list(products), 1)[0]
+    # print('======>>', list(products))
+
 
 
 def get_same_products(hot_product):
