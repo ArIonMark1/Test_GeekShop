@@ -12,7 +12,7 @@ def save_user_profile(backend, user, response, *args, **kwargs):
     if backend.name != 'google':
         return
 
-    api_url = urlunparse(('https', 'api.vk.com', '/method/users.get', None,
+    api_url = urlunparse(('https', 'api.google.com', '/method/users.get', None,
                           urlencode(OrderedDict(fields=','.join(('bdate', 'sex', 'about')),
                                                 access_token=response['access_token'],
                                                 v='5.92')),None))
@@ -35,6 +35,6 @@ def save_user_profile(backend, user, response, *args, **kwargs):
         age = timezone.now().date().year - bdate.year
         if age < 18:
             user.delete()
-            raise AuthForbidden('social_core.backends.vk.VKOAuth2')
+            raise AuthForbidden('social_core.backends.google.GoogleOAuth')
 
     user.save()

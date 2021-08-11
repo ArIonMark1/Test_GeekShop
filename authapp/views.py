@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.mail import send_mail
+from django.db import transaction
 from django.shortcuts import render, HttpResponseRedirect
 from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserProfileForm
 from django.contrib import auth
@@ -64,7 +65,7 @@ def register(request):
 
     return render(request, 'authapp/register.html', content)
 
-
+@transaction.atomic
 def edit(request):
     title = 'редактирование'
 
@@ -84,7 +85,7 @@ def edit(request):
 
 
 def verify(request, email, activation_key):
-    user = ShopUser.objects.filter(email=email).first()
+    user = ShopUser.objects.get(email=email)    # filter(email=email).first()
     # user = ShopUser.objects.get(email=email) # второй варриант
     if user:
         if user.activation_key == activation_key and not user.is_activation_key_expired():

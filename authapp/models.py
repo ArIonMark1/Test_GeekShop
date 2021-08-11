@@ -11,7 +11,7 @@ from datetime import timedelta, datetime
 
 
 class ShopUser(AbstractUser):
-    avatar = models.ImageField(upload_to='users_avatars', blank=True)
+    avatar = models.ImageField(upload_to='users_avatars', blank=True, default=None)
     age = models.PositiveIntegerField(verbose_name='возраст', default=0, blank=True)
 
     activation_key = models.ImageField(max_length=128, blank=True)
@@ -38,8 +38,8 @@ class ShopUserProfile(models.Model):
     )  # tuple внутри кортежи с задаными данными для выбора, где левое значение то которое храниться в базе,
     # а правое - которое будет выводиться на экран
 
-    user = models.OneToOneField(ShopUser, on_delete=models.CASCADE, unique=True, db_index=True)
-    tagline = models.CharField(max_length=128, blank=True)
+    user = models.OneToOneField(ShopUser, on_delete=models.CASCADE, unique=True, db_index=True, null=False)
+    tagline = models.CharField(max_length=128, blank=True, verbose_name='теги')
     about_me = models.TextField(blank=True, verbose_name='о себе')
     gender = models.CharField(choices=GENDER_CHOICES, blank=True, max_length=1, verbose_name='пол')
 

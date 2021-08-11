@@ -75,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-LOGIN_ERROR_URL = '/ '
+LOGIN_ERROR_URL = '/'
 
 WSGI_APPLICATION = 'geekshop.wsgi.application'
 
@@ -113,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'ru-ru'
 
 # TIME_ZONE = 'UTC'
-TIME_ZONE = 'Asia/Yekaterinburg'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -141,19 +141,24 @@ DOMAIN_NAME = 'http://127.0.0.1:8000'
 
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = '25'
-EMAIL_HOST_USER = 'django@geekshop.local'
-EMAIL_HOST_PASSWORD = 'geekshop'
-EMAIL_USE_SSL = False
-# EMAIL_USE_TLS = False
-# EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
 
-# Email ass files
+EMAIL_USE_SSL = False
+# if server support TLS:
+# EMAIL_USE_TLS = True
+
+# EMAIL_HOST_USER = 'django@geekshop.local'
+# EMAIL_HOST_PASSWORD = 'geekshop'
+
+# for debugging: sudo python -m smtpd -n -c DebuggingServer localhost:25
+EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
+#
+# Email as files
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = 'tmp/mails/'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.google.GoogleOAuth',
 )
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')  # client_id
