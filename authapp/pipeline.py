@@ -2,6 +2,7 @@ from collections import OrderedDict
 from datetime import datetime
 from urllib.parse import urlunparse, urlencode
 import requests
+from django.conf import settings
 from django.utils import timezone
 from social_core.exceptions import AuthForbidden
 
@@ -25,6 +26,12 @@ def save_user_profile(backend, user, response, *args, **kwargs):
     data = resp.json()['response'][0]
     if data['sex']:
         user.shopuserprofile.gender = ShopUserProfile.MALE if data['sex'] == 2 else ShopUserProfile.FEMALE
+
+    if 'photo_max_orig' in data:
+        photo_content = requests.get(data['photo_max_orig'])
+        with open (f'{settings.MEDIA_ROOT}/users_avatars/{user.pk}.jps', 'wb') as photo_file:
+            photo_file.write(photo_content.content)
+            user.avatar = f'users_avatars/{user.pk}.jpg'
 
     if data['about']:
         user.shopuserprofile.aboutMe = data['about']
