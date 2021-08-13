@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'mainapp',
     'authapp',
     'basketapp',
-    'adminapp'
+    'ordersapp',
+    'adminapp',
 ]
 
 MIDDLEWARE = [
