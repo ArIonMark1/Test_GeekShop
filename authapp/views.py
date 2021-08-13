@@ -1,11 +1,13 @@
 from django.conf import settings
 from django.core.mail import send_mail
+from django.db import transaction
 from django.shortcuts import render, HttpResponseRedirect
-from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm
+from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserProfileForm
 from django.contrib import auth
 from django.urls import reverse
 
 from authapp.forms import ShopUserEditForm
+from authapp.models import ShopUser
 
 
 def login(request):
@@ -63,28 +65,41 @@ def register(request):
 
     return render(request, 'authapp/register.html', content)
 
-
+@transaction.atomic
 def edit(request):
     title = 'редактирование'
 
     if request.method == 'POST':
         edit_form = ShopUserEditForm(request.POST, request.FILES, instance=request.user)
-        if edit_form.is_valid():
+        profile_form = ShopUserProfileForm(request.POST, instance=request.user.shopuserprofile)
+        if edit_form.is_valid() and profile_form.is_valid():
             edit_form.save()
             return HttpResponseRedirect(reverse('auth:edit'))
     else:
         edit_form = ShopUserEditForm(instance=request.user)
+        profile_form = ShopUserProfileForm(instance=request.user.shopuserprofile)
 
-    content = {'title': title, 'edit_form': edit_form}
+    content = {'title': title, 'edit_form': edit_form, 'profile_form': profile_form }
 
     return render(request, 'authapp/edit.html', content)
 
+
 def verify(request, email, activation_key):
-    pass
+    user = ShopUser.objects.get(email=email)    # filter(email=email).first()
+    # user = ShopUser.objects.get(email=email) # второй варриант
+    if user:
+        if user.activation_key == activation_key and not user.is_activation_key_expired():
+            user.is_active = True
+            user.save()
+            auth.login(request, user,
+                       backend='django.contrib.auth.backends.ModelBackend')  # моментальная автоматическая регистрация(
+            # или можно перебрасывать на страеицу активации..)
+        return render(request, 'authapp/verify.html')  # страничка верификации
+    return HttpResponseRedirect(reverse('main'))  # в случае некоректного ввода активации почты
 
 
 def send_verify_mail(user):
-    subject = 'Verify your account'
+    subject = 'Verify your account'  # сам текст
     link = reverse('auth:verify', args=[user.email, user.activation_key])
     message = f'{settings.DOMAIN_NAME}{link}'
     return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
