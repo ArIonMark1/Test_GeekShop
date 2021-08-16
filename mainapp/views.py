@@ -15,10 +15,9 @@ def load_from_json(file_name):
 
 def get_hot_product():
     products = Product.objects.filter(is_active=True, category__is_active=True)
-
-    return random.sample(list(products), 1)[0]
+    if products:
+        return random.sample(list(products), 1)[0]
     # print('======>>', list(products))
-
 
 
 def get_same_products(hot_product):
@@ -89,12 +88,12 @@ def product(request, pk):
     title = 'продукты'
     links_menu = ProductCategory.objects.filter(is_active=True)
 
-    product = get_object_or_404(Product, pk=pk)
+    shop_product = get_object_or_404(Product, pk=pk)
 
     content = {
         'title': title,
         'links_menu': links_menu,
-        'product': product,
+        'shop_product': shop_product,
     }
     return render(request, 'mainapp/product.html', content)
 
@@ -102,11 +101,15 @@ def product(request, pk):
 def contact(request):
     title = 'о нас'
 
+    # categories = load_from_json('categories')
     locations = load_from_json('contact__locations')
+    # products = load_from_json('products')
 
     content = {
         'title': title,
+        # 'categories': categories,
         'locations': locations,
+        # 'products': products,
     }
 
     return render(request, 'mainapp/contact.html', content)

@@ -29,7 +29,7 @@ def save_user_profile(backend, user, response, *args, **kwargs):
 
     if 'photo_max_orig' in data:
         photo_content = requests.get(data['photo_max_orig'])
-        with open (f'{settings.MEDIA_ROOT}/users_avatars/{user.pk}.jps', 'wb') as photo_file:
+        with open (f'{settings.MEDIA_ROOT}/users_avatars/{user.pk}.jpg', 'wb') as photo_file:
             photo_file.write(photo_content.content)
             user.avatar = f'users_avatars/{user.pk}.jpg'
 

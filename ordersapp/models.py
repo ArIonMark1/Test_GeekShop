@@ -22,9 +22,14 @@ class Order(models.Model):
     )
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    status = models.CharField(choices=STATUSES, default=FORMING)
+    status = models.CharField(choices=STATUSES, default=FORMING, max_length=3)
     created = models.DateTimeField(auto_now_add=True)
-    update = models.DateTimeField(auto_now=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'заказ'
+        verbose_name_plural = 'заказы'
+        ordering = ('-created',)
 
     def __str__(self):
         return f'Заказ номер {self.pk}'
@@ -34,7 +39,8 @@ class Order(models.Model):
         return sum(list(map(lambda x: x.quantity, items)))
 
     def get_total_cost(self):
-        pass
+        items = self.orderitems.select_related()
+        return sum(list(map(lambda x: x.get_product_cost, items)))
 
 
 class OrderItem(models.Model):
@@ -42,5 +48,6 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(default=0)
 
+    @property
     def get_product_cost(self):
         return self.quantity * self.product.price
